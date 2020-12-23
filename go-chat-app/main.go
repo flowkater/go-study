@@ -4,9 +4,16 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
+
+type conn struct {
+	wsConn *websocket.Conn
+	send   chan []byte
+	wg     sync.WaitGroup
+}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
