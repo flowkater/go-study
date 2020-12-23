@@ -21,6 +21,7 @@ func main() {
 	e.POST("/login", h.login)
 	e.GET("/isloggedin", h.restricted, IsLoggedIn)
 	e.GET("/isadmin", h.restricted, IsLoggedIn, isAdmin)
+	e.POST("/refresh", h.token)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

@@ -15,8 +15,13 @@ type handler struct{}
 // https://echo.labstack.com/cookbook/jwt
 
 func (h *handler) login(c echo.Context) error {
-	username := c.FormValue("username")
-	password := c.FormValue("password")
+	params := make(map[string]string)
+	if err := c.Bind(&params); err != nil {
+		return err
+	}
+
+	username := params["username"]
+	password := params["password"]
 	// Check in your db if the user exists or not
 	if username == "jon" && password == "password" {
 		// Create token
@@ -25,7 +30,7 @@ func (h *handler) login(c echo.Context) error {
 		// This is the information which frontend can use
 		// The backend can also decode the token and get admin etc.
 		claims := token.Claims.(jwt.MapClaims)
-		claims["name"] = "Jon Doe"
+		claims["name"] = "Jon Snow"
 		claims["admin"] = true
 		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 		// Generate encoded token and send it as response.
