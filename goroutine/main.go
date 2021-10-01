@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"time"
 )
 
 type Plan struct {
@@ -36,18 +35,33 @@ func main() {
 		plan := <-c
 		fmt.Println(plan.ID, plan.Name, "Todos ", len(plan.Todos))
 	}
+
+	plan := plans[0]
+	todo := getFirstTodo(plan)
+	fmt.Println(todo.Name, todo)
+
+	todo.Name = "TEST"
+
+	fmt.Println(todo.Name, todo)
+	t := plan.Todos[0]
+	fmt.Println(plan.Todos[0].Name, t.Name, t)
+
 }
 
 // goroutine 함수
 func addTodos(plan *Plan, c chan Plan) {
 	var todos []*Todo
 	for i := 0; i < rand.Intn(10)+1; i++ {
-		time.Sleep(time.Second * 1)
+		// time.Sleep(time.Second * 1)
 		todos = append(todos, &Todo{ID: i, PlanID: plan.ID, Name: "Todo " + strconv.Itoa(i)})
 	}
 	plan.Todos = todos
 
 	c <- *plan
+}
+
+func getFirstTodo(plan *Plan) *Todo {
+	return plan.Todos[0]
 }
 
 // func multiply(inChan, outChan chan int) {
