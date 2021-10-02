@@ -28,18 +28,26 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer conn.Close()
+
 	for {
 		typ, reader, err := conn.NextReader()
 		if err != nil {
 			log.Println(err)
 			return
 		}
+
 		writeCloser, err := conn.NextWriter(typ)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
 		_, err = io.Copy(writeCloser, reader)
 		if err != nil {
 			log.Println(err)
 			return
 		}
+
 		if err := writeCloser.Close(); err != nil {
 			log.Println(err)
 			return
